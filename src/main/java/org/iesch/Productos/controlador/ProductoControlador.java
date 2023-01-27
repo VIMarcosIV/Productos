@@ -1,8 +1,10 @@
 package org.iesch.Productos.controlador;
 
 import org.iesch.Productos.modelo.Producto;
+import org.iesch.Productos.repositorio.ProductoRepositorio;
 import org.iesch.Productos.servicio.ProductoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,16 +14,27 @@ public class ProductoControlador {
 
     @Autowired
     ProductoServicio productoServicio;
+    @Autowired
+    ProductoRepositorio productoRepositorio;
 
     // SELECT
-    @GetMapping("api/producto")
-    public List<Producto> obtenerTodos() {
-        return productoServicio.buscaTodosLosProductos();
+    @GetMapping("api/producto/{id}")
+    public ResponseEntity<?> buscaPorId(@PathVariable Long id) {
+        Producto result = productoRepositorio.findById(id).orElse(null);
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("api/producto/{id}")
-    public Producto buscaPorId(@PathVariable Long id) {
-        return productoServicio.buscaPorId(id);
+    @GetMapping("api/producto")
+    public ResponseEntity<?> obtenerTodos() {
+        List<Producto> result = productoRepositorio.findAll();
+        if (result.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(result);
+        }
     }
 
     // INSERT
@@ -38,7 +51,7 @@ public class ProductoControlador {
 
     // DELETE
     @DeleteMapping("api/producto/{id}")
-    public Producto borraProducto(@PathVariable Long id){
+    public Producto borraProducto(@PathVariable Long id) {
         return productoServicio.deleteProducto(id);
     }
 
