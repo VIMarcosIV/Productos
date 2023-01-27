@@ -1,8 +1,7 @@
 package org.iesch.Productos.controlador;
 
-import org.iesch.Productos.modelo.Producto;
-import org.iesch.Productos.repositorio.ProductoRepositorio;
-import org.iesch.Productos.servicio.ProductoServicio;
+import org.iesch.Productos.modelo.Categoria;
+import org.iesch.Productos.repositorio.CategoriaRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,26 +10,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class ProductoControlador {
-
+public class CategoriaControlador {
     @Autowired
-    ProductoServicio productoServicio;
-    @Autowired
-    ProductoRepositorio productoRepositorio;
-
+    CategoriaRepositorio categoriaRepositorio;
+    
     // SELECT
-    @GetMapping("api/producto/{id}")
+    @GetMapping("api/categoria/{id}")
     public ResponseEntity<?> buscaPorId(@PathVariable Long id) {
-        Producto result = productoRepositorio.findById(id).orElse(null);
+        Categoria result = categoriaRepositorio.findById(id).orElse(null);
         if (result == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("api/producto")
+    @GetMapping("api/categoria")
     public ResponseEntity<?> obtenerTodos() {
-        List<Producto> result = productoRepositorio.findAll();
+        List<Categoria> result = categoriaRepositorio.findAll();
         if (result.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
@@ -40,9 +36,9 @@ public class ProductoControlador {
 
     // INSERT
     // Código 201 --> Insertado correctamente
-    @PostMapping("api/producto")
-    public ResponseEntity<?> insertarProducto(@RequestBody Producto producto) {
-        Producto salvado = productoRepositorio.save(producto);
+    @PostMapping("api/categoria")
+    public ResponseEntity<?> insertarProducto(@RequestBody Categoria producto) {
+        Categoria salvado = categoriaRepositorio.save(producto);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvado);
 
     }
@@ -50,8 +46,8 @@ public class ProductoControlador {
     // UPDATE
     // Código (200 --> OK), (404 --> No se ha encontrado el producto)
 
-    @PutMapping("api/producto/{id}")
-    public ResponseEntity<?> editarProducto(@RequestBody Producto producto, @PathVariable Long id) {
+    @PutMapping("api/categoria/{id}")
+    public ResponseEntity<?> editarProducto(@RequestBody Categoria producto, @PathVariable Long id) {
         /*
         return productoRepositorio.findById(id).map(productoEditado -> {
             productoEditado.setNombre(producto.getNombre());
@@ -62,10 +58,10 @@ public class ProductoControlador {
         });
          */
 
-        if (productoRepositorio.existsById(id)) {
+        if (categoriaRepositorio.existsById(id)) {
             producto.setId(id);
-            Producto actualizado = productoRepositorio.save(producto);
-            return ResponseEntity.ok(productoRepositorio.save(actualizado));
+            Categoria actualizado = categoriaRepositorio.save(producto);
+            return ResponseEntity.ok(categoriaRepositorio.save(actualizado));
         } else {
             return ResponseEntity.notFound().build();
 
@@ -73,11 +69,10 @@ public class ProductoControlador {
     }
 
     // DELETE
-    // Código (204 --> Delete correctamente)
-    @DeleteMapping("api/producto/{id}")
+    @DeleteMapping("api/categoria/{id}")
     public ResponseEntity<?> borraProducto(@PathVariable Long id) {
-        productoRepositorio.deleteById(id);
+        categoriaRepositorio.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
+    
 }
