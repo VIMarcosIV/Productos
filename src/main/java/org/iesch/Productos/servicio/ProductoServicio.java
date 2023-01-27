@@ -21,8 +21,8 @@ public class ProductoServicio {
         return productoRepositorio.save(producto);
     }
 
-    public Producto buscaPorId(String id) {
-        Optional<Producto> productoOptional = productoRepositorio.findById(Integer.valueOf(id));
+    public Producto buscaPorId(Long id) {
+        Optional<Producto> productoOptional = productoRepositorio.findById(id);
         if (productoOptional.isPresent()) {
             return productoOptional.get();
         } else {
@@ -36,6 +36,16 @@ public class ProductoServicio {
             return productoRepositorio.save(producto);
         } else {
             return null;
+        }
+    }
+
+    public Producto deleteProducto(Long id) {
+        if(productoRepositorio.existsById(id)){
+            Producto result = productoRepositorio.findById(id).get();
+            productoRepositorio.deleteById(id);
+            return result;
+        }else{
+        return null;
         }
     }
 }

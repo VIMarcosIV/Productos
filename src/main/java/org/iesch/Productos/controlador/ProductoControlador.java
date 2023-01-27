@@ -13,27 +13,33 @@ public class ProductoControlador {
     @Autowired
     ProductoServicio productoServicio;
 
+    // SELECT
     @GetMapping("api/producto")
     public List<Producto> obtenerTodos() {
         return productoServicio.buscaTodosLosProductos();
     }
 
+    @GetMapping("api/producto/{id}")
+    public Producto buscaPorId(@PathVariable Long id) {
+        return productoServicio.buscaPorId(id);
+    }
+
+    // INSERT
     @PostMapping("api/producto")
     public Producto insertarProducto(@RequestBody Producto producto) {
-        Producto actorSalvado = productoServicio.guardaProducto(producto);
-        return actorSalvado;
+        return productoServicio.guardaProducto(producto);
     }
 
-    @GetMapping("api/producto/{id}")
-    public Producto buscaPorId(@PathVariable int id) {
-        return productoServicio.buscaPorId(String.valueOf(id));
-    }
-
+    // UPDATE
     @PutMapping("api/producto/{id}")
-    public Producto editarProducto(@RequestBody Producto producto, @PathVariable int id) {
-        Producto productoEditar = productoServicio.updateProducto(producto);
-        return productoEditar;
+    public Producto editarProducto(@RequestBody Producto producto, @PathVariable Long id) {
+        return productoServicio.updateProducto(producto);
     }
 
+    // DELETE
+    @DeleteMapping("api/producto/{id}")
+    public Producto borraProducto(@PathVariable Long id){
+        return productoServicio.deleteProducto(id);
+    }
 
 }
