@@ -3,7 +3,7 @@ package org.iesch.Productos.controlador;
 import org.iesch.Productos.dto.CreateProductoDTO;
 import org.iesch.Productos.dto.ProductoDTO;
 import org.iesch.Productos.dto.converter.ProductoDTOConverter;
-import org.iesch.Productos.modelo.Categoria;
+import org.iesch.Productos.error.ProductoNoEncontradoExcepcion;
 import org.iesch.Productos.modelo.Producto;
 import org.iesch.Productos.repositorio.CategoriaRepositorio;
 import org.iesch.Productos.repositorio.ProductoRepositorio;
@@ -32,12 +32,8 @@ public class ProductoControlador {
 
     // SELECT
     @GetMapping("api/producto/{id}")
-    public ResponseEntity<?> buscaPorId(@PathVariable Long id) {
-        Producto result = productoRepositorio.findById(id).orElse(null);
-        if (result == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(result);
+    public Producto buscaPorId(@PathVariable Long id) {
+        return productoRepositorio.findById(id).orElseThrow(() -> new ProductoNoEncontradoExcepcion(id));
     }
 
     @GetMapping("api/producto")
