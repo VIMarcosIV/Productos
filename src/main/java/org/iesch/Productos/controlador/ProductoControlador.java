@@ -90,6 +90,7 @@ public class ProductoControlador {
 
     // Acciones con los DTO
 
+    @CrossOrigin(origins = "http://localhost:9999")
     @GetMapping("api/productoDTO")
     public ResponseEntity<?> obtenerTodosATravesDelDTO() {
         List<Producto> result = productoRepositorio.findAll();
